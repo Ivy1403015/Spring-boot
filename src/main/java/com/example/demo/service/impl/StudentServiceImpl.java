@@ -27,4 +27,35 @@ public class StudentServiceImpl implements StudentService {
         return student != null ? new StudentDto(student) : null;
     }
 
+    @Override
+    public StudentDto getStudentBystudentId(Long id) {
+        Student getStudent = studentRepository.findById(id).get();
+
+        return new StudentDto(getStudent);
+    }
+
+    @Override
+    public StudentDto createStudent(StudentDto student) {
+
+        Student studentEntity = new Student(student);
+        Student saveStudent = studentRepository.save(studentEntity);
+
+        return new StudentDto(saveStudent);
+
+    }
+
+    @Override
+    public StudentDto updateStudent(Long id, StudentDto student) {
+        Student studentEntity = studentRepository.findById(id).get();
+        studentEntity.setName(student.getName());
+        Student saveStudent = studentRepository.save(studentEntity);
+
+        return new StudentDto(saveStudent);
+    }
+
+    @Override
+    public void DeleteStudent(Long id) {
+        studentRepository.deleteById(id);
+    }
+
 }

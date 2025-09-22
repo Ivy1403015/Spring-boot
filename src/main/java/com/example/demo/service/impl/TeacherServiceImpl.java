@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.BookDto;
 import com.example.demo.dto.TeacherDto;
 import com.example.demo.entity.Book;
 import com.example.demo.entity.Student;
@@ -73,6 +74,36 @@ public class TeacherServiceImpl implements TeacherService {
         Teacher savedTeacher = teacherRepository.save(teacherEntity);
 
         return new TeacherDto(savedTeacher);
+    }
+
+    @Override
+    public TeacherDto getTeacherByteacherID(Long id) {
+        Teacher getTeacher = teacherRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+        return new TeacherDto(getTeacher);
+    }
+
+    @Override
+    public TeacherDto createTeacher(TeacherDto teacher) {
+        Teacher teacherEntity = new Teacher(teacher);
+        Teacher saveTeacher = teacherRepository.save(teacherEntity);
+
+        return new TeacherDto(saveTeacher);
+    }
+
+    @Override
+    public TeacherDto updateTeacher(Long id, TeacherDto teacher) {
+
+        Teacher teacherEntity = teacherRepository.findById(id).get();
+        teacherEntity.setName(teacher.getName());
+        Teacher saveTeacher = teacherRepository.save(teacherEntity);
+
+        return new TeacherDto(saveTeacher);
+    }
+
+    @Override
+    public void deleteTeacher(Long id) {
+        teacherRepository.deleteById(id);
     }
 
 }

@@ -14,4 +14,11 @@ public interface TeacherService {
 
     TeacherDto addTeacher(String teacherName, List<Long> studentsId, List<Long> bookIds);
 
+    TeacherDto getTeacherByteacherID(Long id);
+
+    TeacherDto createTeacher(TeacherDto teacher);
+
+    TeacherDto updateTeacher(Long id, TeacherDto teacher);
+
+    void deleteTeacher(Long id);
 }

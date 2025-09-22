@@ -3,4 +3,7 @@ Insert into book (title, author) values ('小王子', 'Antoine de Saint-Exupéry
 Insert into book (title, author) values ('Test3', '作者A'); 
 
 Insert into student (name) values ('A'); 
-Insert into student (name) values ('B'); 
+Insert into student (name) values ('B');
+
+Insert into teacher (name) values ('Test1'); 
+Insert into teacher (name) values ('Test2'); 

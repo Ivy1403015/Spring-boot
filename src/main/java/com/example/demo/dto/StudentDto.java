@@ -17,13 +17,14 @@ public class StudentDto {
     public StudentDto(Student student) {
         this.id = student.getId();
         this.name = student.getName();
-        this.teachersId = student.getTeachers().stream()
-                .map(Teacher::getId)
-                .collect(Collectors.toList());
+        /*
+         * this.teachersId = student.getTeachers().stream()
+         * .map(Teacher::getId)
+         * .collect(Collectors.toList());
+         */
     }
 
     public StudentDto() {
-        this.teachersId = new ArrayList<>();
 
     }
 
