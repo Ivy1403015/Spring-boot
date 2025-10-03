@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.BookDto;
 import com.example.demo.dto.TeacherDto;
 import com.example.demo.entity.Book;
 import com.example.demo.entity.Student;
@@ -28,6 +27,7 @@ public class TeacherServiceImpl implements TeacherService {
     private final StudentRepository studentRepository;
     private final BookReporsitory bookReporsitory;
 
+    // TODO: 換到 StudentController . Service
     @Override
     public TeacherDto getStudentsByTeacherId(Long teacherId) {
 
@@ -40,6 +40,7 @@ public class TeacherServiceImpl implements TeacherService {
         return teacher != null ? new TeacherDto(teacher) : null;
     }
 
+    // TODO: 換到 BookController . Service
     @Override
     public TeacherDto getBooksByTeacherId(Long teacherId) {
         // TODO Auto-generated method stub
@@ -80,7 +81,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public TeacherDto getTeacherByteacherID(Long id) {
+    public TeacherDto getTeacherById(Long id) {
         Teacher getTeacher = teacherRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Teacher not found"));
         return new TeacherDto(getTeacher);
@@ -97,6 +98,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public TeacherDto updateTeacher(Long id, TeacherDto teacher) {
 
+        // TODO: id not Found CASE.
         Teacher teacherEntity = teacherRepository.findById(id).get();
         teacherEntity.setName(teacher.getName());
         Teacher saveTeacher = teacherRepository.save(teacherEntity);

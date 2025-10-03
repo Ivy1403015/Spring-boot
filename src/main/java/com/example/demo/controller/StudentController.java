@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,8 +35,8 @@ public class StudentController {
     }
 
     @GetMapping("/api/student/{id}")
-    public StudentDto getMethodName(@PathVariable Long id) {
-        return studentService.getTeachersByStudentId(id);
+    public StudentDto getStudent(@PathVariable Long id) {
+        return studentService.getStudentById(id);
     }
 
     @PostMapping("/api/student")
@@ -58,7 +57,7 @@ public class StudentController {
     @DeleteMapping("/api/student/{id}")
     public void deleteStudent(@PathVariable Long id) {
 
-        studentService.DeleteStudent(id);
+        studentService.deleteStudent(id);
     }
 
 }

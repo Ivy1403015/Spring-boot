@@ -26,7 +26,7 @@ import lombok.Setter;
 public class Teacher {
 
     public Teacher(TeacherDto teacher) {
-        this.id = teacher.getTeacherId();
+        this.id = teacher.getId();
         this.name = teacher.getName();
     }
 
