@@ -7,9 +7,7 @@ import com.example.demo.service.TeacherService;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequiredArgsConstructor
@@ -66,8 +63,8 @@ public class TeacherController {
      */
 
     @GetMapping("/api/teacher/{id}")
-    public TeacherDto getMethodName(@PathVariable Long id) {
-        return teacherService.getTeacherByteacherID(id);
+    public TeacherDto getTeacher(@PathVariable Long id) {
+        return teacherService.getTeacherById(id);
     }
 
     @GetMapping("/api/teacher")
@@ -81,7 +78,8 @@ public class TeacherController {
         return teacherService.createTeacher(teacher);
     }
 
-    @GetMapping("/api/teacher/{id}")
+    // TODO: 換到 StudentController . Service
+    @GetMapping("/api/student/teacher/{id}")
     public TeacherDto getTeacherWithStudents(@PathVariable Long id) {
         return teacherService.getStudentsByTeacherId(id);
     }

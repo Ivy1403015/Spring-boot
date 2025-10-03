@@ -11,14 +11,14 @@ import lombok.Setter;
 public class BookDto {
 
     public BookDto(Book book) {
-        this.bookId = book.getId();
+        this.id = book.getId();
         this.name = book.getName();
     }
 
     public BookDto() {
     }
 
-    private Long bookId;
+    private Long id;
     private String name;
 
     private Teacher teacher;

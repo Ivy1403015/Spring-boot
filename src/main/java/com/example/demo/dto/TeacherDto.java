@@ -2,21 +2,20 @@ package com.example.demo.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import com.example.demo.entity.Book;
-import com.example.demo.entity.Student;
 import com.example.demo.entity.Teacher;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class TeacherDto {
 
     public TeacherDto(Teacher teacher) {
-        this.teacherId = teacher.getId();
+        this.id = teacher.getId();
         this.name = teacher.getName();
         /*
          * this.studentsId =
@@ -27,11 +26,7 @@ public class TeacherDto {
          */
     }
 
-    public TeacherDto() {
-
-    }
-
-    private Long teacherId;
+    private Long id;
     private String name;
 
     private List<Long> booksId = new ArrayList<>();

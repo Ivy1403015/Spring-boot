@@ -19,6 +19,7 @@ import lombok.Setter;
 public class Hourses {
 
     public Hourses(HoursesDto hourses) {
+        this.id = hourses.getId();
         this.name = hourses.getName();
     }
 
