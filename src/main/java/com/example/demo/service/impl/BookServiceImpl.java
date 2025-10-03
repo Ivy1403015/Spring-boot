@@ -54,8 +54,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto updateBook(Long id, BookDto book) {
         Book bookEntity = bookReporsitory.findById(id).get();
-        bookEntity.setTitle(book.getTitle());
-        bookEntity.setAuthor(book.getAuthor());
+        bookEntity.setName(book.getName());
         Book savedBook = bookReporsitory.save(bookEntity);
         return new BookDto(savedBook);
     }

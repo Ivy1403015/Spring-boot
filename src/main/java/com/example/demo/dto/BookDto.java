@@ -12,16 +12,14 @@ public class BookDto {
 
     public BookDto(Book book) {
         this.bookId = book.getId();
-        this.title = book.getTitle();
-        this.author = book.getAuthor();
+        this.name = book.getName();
     }
 
     public BookDto() {
     }
 
     private Long bookId;
-    private String title;
-    private String author;
+    private String name;
 
     private Teacher teacher;
 

@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,11 @@ import com.example.demo.repository.TeacherRepository;
 import com.example.demo.service.TeacherService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
@@ -103,7 +106,14 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public void deleteTeacher(Long id) {
+        log.info("Delete TeacherID:{}", id);
         teacherRepository.deleteById(id);
+    }
+
+    @Override
+    public List<TeacherDto> getAllTeachers() {
+        List<Teacher> teachers = teacherRepository.findAll();
+        return teachers.stream().map(TeacherDto::new).collect(Collectors.toList());
     }
 
 }

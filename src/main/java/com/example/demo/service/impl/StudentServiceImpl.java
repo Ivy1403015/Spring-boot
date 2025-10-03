@@ -1,5 +1,8 @@
 package com.example.demo.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +59,12 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void DeleteStudent(Long id) {
         studentRepository.deleteById(id);
+    }
+
+    @Override
+    public List<StudentDto> getAllStudents() {
+        List<Student> students = studentRepository.findAll();
+        return students.stream().map(StudentDto::new).collect(Collectors.toList());
     }
 
 }

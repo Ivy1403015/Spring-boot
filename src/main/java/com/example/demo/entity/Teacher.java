@@ -15,21 +15,19 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Setter
 @Getter
+@NoArgsConstructor
 @Table(name = "teacher")
 public class Teacher {
 
     public Teacher(TeacherDto teacher) {
         this.id = teacher.getTeacherId();
         this.name = teacher.getName();
-    }
-
-    public Teacher() {
-
     }
 
     @Id
@@ -41,7 +39,7 @@ public class Teacher {
     private List<Book> books;
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinTable(name = "student_teacher", joinColumns = @JoinColumn(name = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
+    @JoinTable(name = "student_teacher", joinColumns = @JoinColumn(name = "teacher", referencedColumnName = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     List<Student> students;
 
 }

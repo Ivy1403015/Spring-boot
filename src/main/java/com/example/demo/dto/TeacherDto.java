@@ -34,7 +34,7 @@ public class TeacherDto {
     private Long teacherId;
     private String name;
 
-    private List<Long> booksId;
-    private List<Long> studentsId;
+    private List<Long> booksId = new ArrayList<>();
+    private List<Long> studentsId = new ArrayList<>();
 
 }

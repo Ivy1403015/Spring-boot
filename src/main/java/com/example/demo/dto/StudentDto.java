@@ -30,6 +30,6 @@ public class StudentDto {
 
     private Long id;
     private String name;
-    List<Long> teachersId;
+    List<Long> teachersId = new ArrayList<>();
 
 }

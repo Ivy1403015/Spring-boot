@@ -65,32 +65,33 @@ public class TeacherController {
      * }
      */
 
-    /*
-     * @GetMapping("/teacher/{id}")
-     * public TeacherDto getMethodName(@PathVariable Long id) {
-     * TeacherDto getTeacher = teacherService.getTeacherByteacherID(id);
-     * return getTeacher;
-     * }
-     */
-
-    @PostMapping("/teacher")
-    public TeacherDto creaTeacher(@RequestBody TeacherDto teacher) {
-        TeacherDto addTeacherDto = teacherService.createTeacher(teacher);
-
-        return addTeacherDto;
+    @GetMapping("/api/teacher/{id}")
+    public TeacherDto getMethodName(@PathVariable Long id) {
+        return teacherService.getTeacherByteacherID(id);
     }
 
-    @GetMapping("/teacher/{id}")
+    @GetMapping("/api/teacher")
+    public List<TeacherDto> getAllTeachers() {
+        return teacherService.getAllTeachers();
+    }
+
+    @PostMapping("/api/teacher")
+    public TeacherDto creaTeacher(@RequestBody TeacherDto teacher) {
+
+        return teacherService.createTeacher(teacher);
+    }
+
+    @GetMapping("/api/teacher/{id}")
     public TeacherDto getTeacherWithStudents(@PathVariable Long id) {
         return teacherService.getStudentsByTeacherId(id);
     }
 
-    @PatchMapping("/teacher/{id}")
+    @PatchMapping("/api/teacher/{id}")
     public TeacherDto updateTeacher(@PathVariable Long id, @RequestBody TeacherDto teacher) {
         return teacherService.updateTeacher(id, teacher);
     }
 
-    @DeleteMapping("/teacher/{id}")
+    @DeleteMapping("/api/teacher/{id}")
     public void deleteTeacher(@PathVariable Long id) {
         teacherService.deleteTeacher(id);
     }

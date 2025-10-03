@@ -1,30 +1,25 @@
 package com.example.demo.entity;
 
-import java.util.List;
-
-import com.example.demo.dto.StudentDto;
+import com.example.demo.dto.HoursesDto;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-import lombok.Getter;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
-@Table(name = "student")
-public class Student {
+public class Hourses {
 
-    public Student(StudentDto student) {
-        this.id = student.getId();
-        this.name = student.getName();
-
+    public Hourses(HoursesDto hourses) {
+        this.name = hourses.getName();
     }
 
     @Id
@@ -32,7 +27,8 @@ public class Student {
     private Long id;
     private String name;
 
-    @ManyToMany(mappedBy = "students")
-    List<Teacher> teachers;
+    @OneToOne
+    @JoinColumn(name = "bookId")
+    private Book book;
 
 }

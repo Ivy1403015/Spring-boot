@@ -21,31 +21,31 @@ public class BookController {
 
     private final BookService bookService;
 
-    @GetMapping("/books")
+    @GetMapping("/api/books")
     public List<BookDto> getAllBooks() {
         List<BookDto> books = bookService.getAllBooks();
         return books;
     }
 
-    @GetMapping("/books/{id}")
+    @GetMapping("/api/books/{id}")
     public BookDto getBookById(@PathVariable Long id) {
         BookDto book = bookService.getBookById(id);
         return book;
     }
 
-    @PostMapping("/books")
+    @PostMapping("/api/books")
     public BookDto createBook(@RequestBody BookDto book) {
         BookDto createdBook = bookService.createBook(book);
         return createdBook;
     }
 
-    @PutMapping("/books/{id}")
+    @PutMapping("/api/books/{id}")
     public BookDto updateBook(@PathVariable Long id, @RequestBody BookDto book) {
         BookDto updatedBook = bookService.updateBook(id, book);
         return updatedBook;
     }
 
-    @DeleteMapping("/books/{id}")
+    @DeleteMapping("/api/books/{id}")
     public void deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
     }

@@ -14,6 +14,8 @@ public interface TeacherService {
 
     TeacherDto addTeacher(String teacherName, List<Long> studentsId, List<Long> bookIds);
 
+    List<TeacherDto> getAllTeachers();
+
     TeacherDto getTeacherByteacherID(Long id);
 
     TeacherDto createTeacher(TeacherDto teacher);
