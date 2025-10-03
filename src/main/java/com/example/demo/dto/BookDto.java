@@ -1,6 +1,7 @@
 package com.example.demo.dto;
 
 import com.example.demo.entity.Book;
+import com.example.demo.entity.Teacher;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import lombok.Setter;
 public class BookDto {
 
     public BookDto(Book book) {
-        this.id = book.getId();
+        this.bookId = book.getId();
         this.title = book.getTitle();
         this.author = book.getAuthor();
     }
@@ -18,8 +19,10 @@ public class BookDto {
     public BookDto() {
     }
 
-    private Long id;
+    private Long bookId;
     private String title;
     private String author;
+
+    private Teacher teacher;
 
 }
