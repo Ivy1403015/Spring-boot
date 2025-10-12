@@ -42,9 +42,11 @@ public class BookServiceImpl implements BookService {
 
         // 設置 Teacher 關聯
         if (book.getTeacher() != null && book.getTeacher().getId() != null) {
-            Teacher teacher = teacherRepository.findById(book.getTeacher().getId())
-                    .orElseThrow(() -> new RuntimeException("Teacher not found with id: " + book.getTeacher().getId()));
-            bookEntity.setTeacher(teacher);
+            if (book.getTeacher() != null) {
+                Teacher teacher = teacherRepository.findById(book.getTeacher().getId())
+                        .orElseThrow(() -> new RuntimeException("Teacher not found with id: " + book.getTeacher().getId()));
+                bookEntity.setTeacher(teacher);
+            }
         }
 
         Book savedBook = bookReporsitory.save(bookEntity);
@@ -53,6 +55,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto updateBook(Long id, BookDto book) {
+        // TODO: id not Found CASE.
         Book bookEntity = bookReporsitory.findById(id).get();
         bookEntity.setName(book.getName());
         Book savedBook = bookReporsitory.save(bookEntity);

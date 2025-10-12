@@ -23,6 +23,7 @@ import lombok.Setter;
 public class Book {
 
     public Book(BookDto bookDto) {
+        this.id = bookDto.getId();
         this.name = bookDto.getName();
     }
 

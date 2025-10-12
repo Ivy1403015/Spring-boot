@@ -2,8 +2,6 @@ package com.example.demo.service;
 
 import java.util.List;
 
-import com.example.demo.dto.BookDto;
-import com.example.demo.dto.StudentDto;
 import com.example.demo.dto.TeacherDto;
 
 public interface TeacherService {
@@ -16,7 +14,7 @@ public interface TeacherService {
 
     List<TeacherDto> getAllTeachers();
 
-    TeacherDto getTeacherByteacherID(Long id);
+    TeacherDto getTeacherById(Long id);
 
     TeacherDto createTeacher(TeacherDto teacher);
 

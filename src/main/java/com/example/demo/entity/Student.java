@@ -24,7 +24,6 @@ public class Student {
     public Student(StudentDto student) {
         this.id = student.getId();
         this.name = student.getName();
-
     }
 
     @Id

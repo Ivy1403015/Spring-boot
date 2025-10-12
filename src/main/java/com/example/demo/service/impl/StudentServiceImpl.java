@@ -31,7 +31,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDto getStudentBystudentId(Long id) {
+    public StudentDto getStudentById(Long id) {
+        // TODO: id not Found CASE.
         Student getStudent = studentRepository.findById(id).get();
 
         return new StudentDto(getStudent);
@@ -49,6 +50,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentDto updateStudent(Long id, StudentDto student) {
+        // TODO: id not Found CASE.
         Student studentEntity = studentRepository.findById(id).get();
         studentEntity.setName(student.getName());
         Student saveStudent = studentRepository.save(studentEntity);
@@ -57,7 +59,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void DeleteStudent(Long id) {
+    public void deleteStudent(Long id) {
         studentRepository.deleteById(id);
     }
 
