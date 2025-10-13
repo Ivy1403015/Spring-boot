@@ -78,12 +78,6 @@ public class TeacherController {
         return teacherService.createTeacher(teacher);
     }
 
-    // TODO: 換到 StudentController . Service
-    @GetMapping("/api/student/teacher/{id}")
-    public TeacherDto getTeacherWithStudents(@PathVariable Long id) {
-        return teacherService.getStudentsByTeacherId(id);
-    }
-
     @PatchMapping("/api/teacher/{id}")
     public TeacherDto updateTeacher(@PathVariable Long id, @RequestBody TeacherDto teacher) {
         return teacherService.updateTeacher(id, teacher);

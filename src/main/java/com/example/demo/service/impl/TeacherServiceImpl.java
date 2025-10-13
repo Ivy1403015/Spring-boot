@@ -90,6 +90,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public TeacherDto createTeacher(TeacherDto teacher) {
         Teacher teacherEntity = new Teacher(teacher);
+
         Teacher saveTeacher = teacherRepository.save(teacherEntity);
 
         return new TeacherDto(saveTeacher);
@@ -99,7 +100,8 @@ public class TeacherServiceImpl implements TeacherService {
     public TeacherDto updateTeacher(Long id, TeacherDto teacher) {
 
         // TODO: id not Found CASE.
-        Teacher teacherEntity = teacherRepository.findById(id).get();
+        Teacher teacherEntity = teacherRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
         teacherEntity.setName(teacher.getName());
         Teacher saveTeacher = teacherRepository.save(teacherEntity);
 

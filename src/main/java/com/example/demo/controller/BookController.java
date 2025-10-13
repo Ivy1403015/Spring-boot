@@ -45,7 +45,7 @@ public class BookController {
         return updatedBook;
     }
 
-    @DeleteMapping("/api/books/{id}")
+    @DeleteMapping("/api/booksDel/{id}")
     public void deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
     }

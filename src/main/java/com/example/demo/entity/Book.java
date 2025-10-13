@@ -22,22 +22,24 @@ import lombok.Setter;
 @Table(name = "book")
 public class Book {
 
-    public Book(BookDto bookDto) {
-        this.id = bookDto.getId();
-        this.name = bookDto.getName();
-    }
+        public Book(BookDto bookDto) {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
+                this.id = bookDto.getId();
 
-    @ManyToOne
-    @JoinColumn(name = "teacherId")
-    private Teacher teacher;
+                this.name = bookDto.getName();
 
-    @OneToOne
-    @JoinColumn(name = "hoursesId")
-    private Hourses hourses;
+        }
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+        private String name;
+
+        @ManyToOne
+        @JoinColumn(name = "teacherId") // 設定外鍵名稱
+        private Teacher teacher;
+
+        @OneToOne
+        private Hourses hourses;
 
 }

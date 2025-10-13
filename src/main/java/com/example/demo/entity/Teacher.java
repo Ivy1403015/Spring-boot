@@ -13,7 +13,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +21,6 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-@Table(name = "teacher")
 public class Teacher {
 
     public Teacher(TeacherDto teacher) {
@@ -35,11 +33,11 @@ public class Teacher {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "teacher", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private List<Book> books;
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinTable(name = "student_teacher", joinColumns = @JoinColumn(name = "teacher", referencedColumnName = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
+    @JoinTable(name = "student_teacher", joinColumns = @JoinColumn(name = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     List<Student> students;
 
 }

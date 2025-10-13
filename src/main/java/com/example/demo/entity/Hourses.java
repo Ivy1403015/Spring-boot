@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
@@ -28,8 +27,7 @@ public class Hourses {
     private Long id;
     private String name;
 
-    @OneToOne
-    @JoinColumn(name = "bookId")
+    @OneToOne(mappedBy = "hourses")
     private Book book;
 
 }

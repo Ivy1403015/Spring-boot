@@ -3,7 +3,9 @@ package com.example.demo.service.impl;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.HoursesDto;
+import com.example.demo.entity.Book;
 import com.example.demo.entity.Hourses;
+import com.example.demo.repository.BookReporsitory;
 import com.example.demo.repository.HoursesRepository;
 import com.example.demo.service.HoursesService;
 
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class HoursesServiceImpl implements HoursesService {
 
     private final HoursesRepository hoursesRepository;
+    private final BookReporsitory bookReporsitory;
 
     @Override
     public HoursesDto getHourses(Long id) {
@@ -24,6 +27,13 @@ public class HoursesServiceImpl implements HoursesService {
     @Override
     public HoursesDto addHourses(HoursesDto hourses) {
         Hourses hoursesEntity = new Hourses(hourses);
+
+        if (hourses.getBookId() != null) {
+            Book book = bookReporsitory.findById(hourses.getBookId())
+                    .orElseThrow(() -> new RuntimeException("Book not found with id: " + hourses.getBookId()));
+            hoursesEntity.setBook(book);
+        }
+
         Hourses saveHourses = hoursesRepository.save(hoursesEntity);
         return new HoursesDto(saveHourses);
     }
@@ -33,6 +43,11 @@ public class HoursesServiceImpl implements HoursesService {
         Hourses hoursesEntity = hoursesRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Hourses not found"));
         hoursesEntity.setName(hourses.getName());
+        if (hourses.getBookId() != null) {
+            Book book = bookReporsitory.findById(hourses.getBookId())
+                    .orElseThrow(() -> new RuntimeException("Book not found with id: " + hourses.getBookId()));
+            hoursesEntity.setBook(book);
+        }
         Hourses saveHourses = hoursesRepository.save(hoursesEntity);
         return new HoursesDto(saveHourses);
     }
