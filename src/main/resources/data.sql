@@ -1,6 +1,6 @@
-Insert into book (title, author) values ('The Great Gatsby', 'F. Scott Fitzgerald'); 
-Insert into book (title, author) values ('小王子', 'Antoine de Saint-Exupéry'); 
-Insert into book (title, author) values ('Test3', '作者A'); 
+Insert into Hourses (name) values ('The Great Gatsby'); 
+Insert into Hourses (name) values ('小王子'); 
+Insert into Hourses (name) values ('Test3'); 
 
 Insert into student (name) values ('A'); 
 Insert into student (name) values ('B');
