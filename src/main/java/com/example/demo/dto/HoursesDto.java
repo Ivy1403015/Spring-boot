@@ -14,12 +14,14 @@ public class HoursesDto {
     private Long id;
     private String name;
     private Long bookId;
+    private BookDto book;
 
     public HoursesDto(Hourses hourses) {
         this.id = hourses.getId();
         this.name = hourses.getName();
         if (hourses.getBook() != null) {
             this.bookId = hourses.getBook().getId();
+            this.book = new BookDto(hourses.getBook());
         }
     }
 }

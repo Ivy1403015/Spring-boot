@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import com.example.demo.dto.HoursesDto;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,7 +28,7 @@ public class Hourses {
     private Long id;
     private String name;
 
-    @OneToOne(mappedBy = "hourses")
+    @OneToOne(mappedBy = "hourses", cascade = CascadeType.ALL)
     private Book book;
 
 }

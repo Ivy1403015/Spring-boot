@@ -22,14 +22,6 @@ import lombok.Setter;
 @Table(name = "book")
 public class Book {
 
-        public Book(BookDto bookDto) {
-
-                this.id = bookDto.getId();
-
-                this.name = bookDto.getName();
-
-        }
-
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
@@ -40,6 +32,15 @@ public class Book {
         private Teacher teacher;
 
         @OneToOne
+        @JoinColumn(name = "hoursesId")
         private Hourses hourses;
+
+        public Book(BookDto bookDto) {
+
+                this.id = bookDto.getId();
+
+                this.name = bookDto.getName();
+
+        }
 
 }

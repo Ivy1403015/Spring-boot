@@ -27,7 +27,9 @@ public class TeacherDto {
         this.id = teacher.getId();
         this.name = teacher.getName();
 
-        this.studentsId = teacher.getStudents().stream().map(Student::getId).collect(Collectors.toList());
+        if (teacher.getStudents() != null) {
+            this.studentsId = teacher.getStudents().stream().map(Student::getId).collect(Collectors.toList());
+        }
 
         if (teacher.getBooks() != null) {
             this.booksId = teacher.getBooks().stream().map(Book::getId).collect(Collectors.toList());

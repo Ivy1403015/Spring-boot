@@ -7,3 +7,6 @@ Insert into student (name) values ('B');
 
 Insert into teacher (name) values ('Test1'); 
 Insert into teacher (name) values ('Test2'); 
+
+Insert into book (name) values ('book1'); 
+Insert into book (name) values ('book2'); 

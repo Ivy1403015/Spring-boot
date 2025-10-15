@@ -6,12 +6,6 @@ import com.example.demo.dto.TeacherDto;
 
 public interface TeacherService {
 
-    TeacherDto getStudentsByTeacherId(Long teacherId);
-
-    TeacherDto getBooksByTeacherId(Long teacherId);
-
-    TeacherDto addTeacher(String teacherName, List<Long> studentsId, List<Long> bookIds);
-
     List<TeacherDto> getAllTeachers();
 
     TeacherDto getTeacherById(Long id);

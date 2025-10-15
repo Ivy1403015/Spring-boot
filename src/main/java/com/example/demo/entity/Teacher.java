@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.demo.dto.TeacherDto;
@@ -33,8 +34,8 @@ public class Teacher {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "teacher", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private List<Book> books;
+    @OneToMany(mappedBy = "teacher")
+    private List<Book> books = new ArrayList<>();
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "student_teacher", joinColumns = @JoinColumn(name = "teacher_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))

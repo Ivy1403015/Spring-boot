@@ -1,9 +1,11 @@
 package com.example.demo.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.TeacherDto;
@@ -15,6 +17,7 @@ import com.example.demo.repository.StudentRepository;
 import com.example.demo.repository.TeacherRepository;
 import com.example.demo.service.TeacherService;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,59 +30,6 @@ public class TeacherServiceImpl implements TeacherService {
     private final StudentRepository studentRepository;
     private final BookReporsitory bookReporsitory;
 
-    // TODO: 換到 StudentController . Service
-    @Override
-    public TeacherDto getStudentsByTeacherId(Long teacherId) {
-
-        // 先搜尋老師資料，再依關聯取得學生資料清單
-        Teacher teacher = teacherRepository.findById(teacherId).orElse(null);
-        if (teacher != null) {
-            Hibernate.initialize(teacher.getStudents());
-        }
-
-        return teacher != null ? new TeacherDto(teacher) : null;
-    }
-
-    // TODO: 換到 BookController . Service
-    @Override
-    public TeacherDto getBooksByTeacherId(Long teacherId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getBooksByTeacherId'");
-    }
-
-    @Override
-    public TeacherDto addTeacher(String teacherName, List<Long> studentsId, List<Long> bookIds) {
-        Teacher teacherEntity = new Teacher();
-        teacherEntity.setName(teacherName);
-
-        // 確認要新增的學生資料
-        List<Student> students = studentRepository.findAllById(studentsId);
-        if (students.size() != studentsId.size()) {
-            throw new IllegalArgumentException("Some student Id are invalid.");
-        }
-
-        // 建立老師及學生的關聯資料
-        for (Student student : students) {
-            teacherEntity.getStudents().add(student);
-            student.getTeachers().add(teacherEntity);
-        }
-
-        if (bookIds != null && !bookIds.isEmpty()) {
-            List<Book> books = bookReporsitory.findAllById(bookIds);
-            if (books.size() != bookIds.size()) {
-                throw new IllegalArgumentException("Some book IDs are invalid: " + bookIds);
-            }
-            for (Book book : books) {
-                teacherEntity.getBooks().add(book);
-                book.setTeacher(teacherEntity);
-            }
-        }
-
-        Teacher savedTeacher = teacherRepository.save(teacherEntity);
-
-        return new TeacherDto(savedTeacher);
-    }
-
     @Override
     public TeacherDto getTeacherById(Long id) {
         Teacher getTeacher = teacherRepository.findById(id)
@@ -90,8 +40,20 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public TeacherDto createTeacher(TeacherDto teacher) {
         Teacher teacherEntity = new Teacher(teacher);
-
         Teacher saveTeacher = teacherRepository.save(teacherEntity);
+
+        // 建立book關聯
+        if (teacher.getBooksId() != null && !teacher.getBooksId().isEmpty()) {
+
+            for (Long bookId : teacher.getBooksId()) {
+                Book book = bookReporsitory.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found."));
+
+                book.setTeacher(saveTeacher);// 建立book對teacher的關聯
+                saveTeacher.getBooks().add(book);// 建立teacher對book的關聯
+                bookReporsitory.save(book);
+            }
+
+        }
 
         return new TeacherDto(saveTeacher);
     }
@@ -99,19 +61,85 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public TeacherDto updateTeacher(Long id, TeacherDto teacher) {
 
-        // TODO: id not Found CASE.
         Teacher teacherEntity = teacherRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Teacher not found"));
-        teacherEntity.setName(teacher.getName());
+
+        if (teacher.getName() != null) {
+            teacherEntity.setName(teacher.getName());
+        }
+
+        // 更新book關聯
+        if (teacher.getBooksId() != null && !teacher.getBooksId().isEmpty()) {
+            Set<Long> currentIds = teacherEntity.getBooks().stream().map(Book::getId).collect(Collectors.toSet());
+            Set<Long> newIds = new HashSet<>(teacher.getBooksId());// POST中關聯的Id
+
+            if (currentIds != null && !currentIds.isEmpty()) {
+
+                // 移除不存在的Id
+                for (Long removeId : currentIds.stream().filter(bookId -> !newIds.contains(bookId))
+                        .collect(Collectors.toList())) {
+
+                    Book book = bookReporsitory.findById(removeId)
+                            .orElseThrow(() -> new RuntimeException("Book not found."));
+                    book.setTeacher(null); // 解除 book -> teacher
+                    // 從 teacher 端集合移除該書
+                    teacherEntity.getBooks().removeIf(b -> b.getId().equals(removeId));
+                    bookReporsitory.save(book);
+                }
+
+                // 新增Id關聯
+                for (Long addId : newIds.stream()
+                        .filter(bookId -> !currentIds.contains(bookId))
+                        .collect(Collectors.toList())) {
+
+                    Book book = bookReporsitory.findById(addId)
+                            .orElseThrow(() -> new RuntimeException("Book not found."));
+
+                    book.setTeacher(teacherEntity);// 建立book對teacher的關聯
+                    teacherEntity.getBooks().add(book);// 建立teacher對book的關聯
+                    bookReporsitory.save(book);
+
+                }
+            } else {
+                for (Long addId : newIds) {
+
+                    Book book = bookReporsitory.findById(addId)
+                            .orElseThrow(() -> new RuntimeException("Book not found."));
+
+                    book.setTeacher(teacherEntity);// 建立book對teacher的關聯
+                    teacherEntity.getBooks().add(book);// 建立teacher對book的關聯
+                    bookReporsitory.save(book);
+
+                }
+            }
+        }
         Teacher saveTeacher = teacherRepository.save(teacherEntity);
 
         return new TeacherDto(saveTeacher);
     }
 
+    @Transactional
     @Override
     public void deleteTeacher(Long id) {
-        log.info("Delete TeacherID:{}", id);
-        teacherRepository.deleteById(id);
+
+        Teacher teacher = teacherRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+        // getBooks().stream().map(Book::getId).collect(Collectors.toList());
+
+        if (teacher != null) {
+            List<Long> currentIds = teacher.getBooks().stream().map(Book::getId).collect(Collectors.toList());
+
+            for (Long delId : currentIds) {
+                Book book = bookReporsitory.findById(delId)
+                        .orElseThrow(() -> new RuntimeException("Book not found."));
+                book.setTeacher(null); // 解除 book -> teacher
+                // 從 teacher 端集合移除該書
+                teacher.getBooks().removeIf(b -> b.getId().equals(delId));
+                bookReporsitory.save(book);
+            }
+            teacherRepository.deleteById(id);
+
+        }
     }
 
     @Override
