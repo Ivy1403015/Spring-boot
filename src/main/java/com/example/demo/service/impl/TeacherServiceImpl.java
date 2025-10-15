@@ -58,6 +58,7 @@ public class TeacherServiceImpl implements TeacherService {
         return new TeacherDto(saveTeacher);
     }
 
+    @Transactional
     @Override
     public TeacherDto updateTeacher(Long id, TeacherDto teacher) {
 
@@ -67,49 +68,18 @@ public class TeacherServiceImpl implements TeacherService {
         if (teacher.getName() != null) {
             teacherEntity.setName(teacher.getName());
         }
-
         // 更新book關聯
-        if (teacher.getBooksId() != null && !teacher.getBooksId().isEmpty()) {
-            Set<Long> currentIds = teacherEntity.getBooks().stream().map(Book::getId).collect(Collectors.toSet());
-            Set<Long> newIds = new HashSet<>(teacher.getBooksId());// POST中關聯的Id
-
-            if (currentIds != null && !currentIds.isEmpty()) {
-
-                // 移除不存在的Id
-                for (Long removeId : currentIds.stream().filter(bookId -> !newIds.contains(bookId))
-                        .collect(Collectors.toList())) {
-
-                    Book book = bookReporsitory.findById(removeId)
-                            .orElseThrow(() -> new RuntimeException("Book not found."));
-                    book.setTeacher(null); // 解除 book -> teacher
-                    // 從 teacher 端集合移除該書
-                    teacherEntity.getBooks().removeIf(b -> b.getId().equals(removeId));
-                    bookReporsitory.save(book);
-                }
-
-                // 新增Id關聯
-                for (Long addId : newIds.stream()
-                        .filter(bookId -> !currentIds.contains(bookId))
-                        .collect(Collectors.toList())) {
-
-                    Book book = bookReporsitory.findById(addId)
-                            .orElseThrow(() -> new RuntimeException("Book not found."));
-
-                    book.setTeacher(teacherEntity);// 建立book對teacher的關聯
-                    teacherEntity.getBooks().add(book);// 建立teacher對book的關聯
-                    bookReporsitory.save(book);
-
-                }
-            } else {
-                for (Long addId : newIds) {
-
-                    Book book = bookReporsitory.findById(addId)
-                            .orElseThrow(() -> new RuntimeException("Book not found."));
-
-                    book.setTeacher(teacherEntity);// 建立book對teacher的關聯
-                    teacherEntity.getBooks().add(book);// 建立teacher對book的關聯
-                    bookReporsitory.save(book);
-
+        if (teacher.getBooksId() != null) {
+            // 1. 解除舊的關聯 - 將原本關聯的book設為null
+            for (Book oldBook : teacherEntity.getBooks())
+                oldBook.setTeacher(null);
+            teacherEntity.getBooks().clear();
+            // 2. 建立新的關聯
+            if (!teacher.getBooksId().isEmpty()) {
+                List<Book> newBooks = bookReporsitory.findAllById(teacher.getBooksId());
+                for (Book book : newBooks) {
+                    book.setTeacher(teacherEntity);  // 設定book -> teacher
+                    teacherEntity.getBooks().add(book);  // 設定teacher -> book
                 }
             }
         }
@@ -126,20 +96,17 @@ public class TeacherServiceImpl implements TeacherService {
                 .orElseThrow(() -> new RuntimeException("Teacher not found"));
         // getBooks().stream().map(Book::getId).collect(Collectors.toList());
 
-        if (teacher != null) {
-            List<Long> currentIds = teacher.getBooks().stream().map(Book::getId).collect(Collectors.toList());
+        List<Long> teacherBookIds = teacher.getBooks().stream().map(Book::getId).collect(Collectors.toList());
 
-            for (Long delId : currentIds) {
-                Book book = bookReporsitory.findById(delId)
-                        .orElseThrow(() -> new RuntimeException("Book not found."));
-                book.setTeacher(null); // 解除 book -> teacher
-                // 從 teacher 端集合移除該書
-                teacher.getBooks().removeIf(b -> b.getId().equals(delId));
-                bookReporsitory.save(book);
-            }
-            teacherRepository.deleteById(id);
-
+        for (Long teacherBookId : teacherBookIds) {
+            Book book = bookReporsitory.findById(teacherBookId)
+                    .orElseThrow(() -> new RuntimeException("Book not found."));
+            book.setTeacher(null); // 解除 book -> teacher
+            // TODO: 待確認需不需要
+            bookReporsitory.save(book);
         }
+        teacherRepository.deleteById(id);
+
     }
 
     @Override
