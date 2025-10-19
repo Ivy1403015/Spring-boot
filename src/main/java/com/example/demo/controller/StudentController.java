@@ -47,9 +47,9 @@ public class StudentController {
     }
 
     @PatchMapping("/api/student/{id}")
-    public StudentDto updateStudent(@PathVariable Long id, @RequestBody StudentDto student) {
+    public StudentDto patchStudent(@PathVariable Long id, @RequestBody StudentDto student) {
 
-        StudentDto updaStudent = studentService.updateStudent(id, student);
+        StudentDto updaStudent = studentService.patchStudent(id, student);
 
         return updaStudent;
     }

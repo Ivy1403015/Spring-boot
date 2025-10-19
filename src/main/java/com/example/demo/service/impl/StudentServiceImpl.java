@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.StudentDto;
 import com.example.demo.entity.Student;
+import com.example.demo.entity.Teacher;
 import com.example.demo.repository.StudentRepository;
+import com.example.demo.repository.TeacherRepository;
 import com.example.demo.service.StudentService;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -18,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
 
     @Override
     public StudentDto getTeachersByStudentId(Long studentId) {
@@ -32,16 +36,31 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentDto getStudentById(Long id) {
-        // TODO: id not Found CASE.
-        Student getStudent = studentRepository.findById(id).get();
+
+        Student getStudent = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
 
         return new StudentDto(getStudent);
     }
 
     @Override
+    @Transactional
     public StudentDto createStudent(StudentDto student) {
 
         Student studentEntity = new Student(student);
+
+        if (student.getTeacherIds() != null) {
+
+            List<Teacher> teachers = teacherRepository.findAllById(student.getTeacherIds());
+
+            for (Teacher teacher : teachers) {
+                teacher.getStudents().add(studentEntity); // 設定teacher對student的關聯
+            }
+            studentEntity.setTeachers(teachers);
+
+            teacherRepository.saveAll(teachers);// 確保teacher同步至關聯表
+
+        }
         Student saveStudent = studentRepository.save(studentEntity);
 
         return new StudentDto(saveStudent);
@@ -49,17 +68,52 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDto updateStudent(Long id, StudentDto student) {
-        // TODO: id not Found CASE.
-        Student studentEntity = studentRepository.findById(id).get();
+    public StudentDto patchStudent(Long id, StudentDto student) {
+
+        Student studentEntity = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
         studentEntity.setName(student.getName());
+
+        if (student.getTeacherIds() != null) {
+
+            // 清除teacher對student的關聯
+            for (Teacher teacher : studentEntity.getTeachers()) {
+                teacher.getStudents().remove(studentEntity);
+            }
+
+            if (student.getTeacherIds().isEmpty()) {
+
+                // 清除Student對teacher的關聯
+                studentEntity.getTeachers().clear();
+            } else {
+
+                List<Teacher> teachers = teacherRepository.findAllById(student.getTeacherIds());
+
+                for (Teacher teacher : teachers) {
+                    teacher.getStudents().add(studentEntity);
+                }
+                studentEntity.setTeachers(teachers);
+
+            }
+
+        }
+
         Student saveStudent = studentRepository.save(studentEntity);
 
         return new StudentDto(saveStudent);
     }
 
+    @Transactional
     @Override
     public void deleteStudent(Long id) {
+        Student studentEntity = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        for (Teacher teacher : studentEntity.getTeachers()) {
+            teacher.getStudents().remove(studentEntity);
+        }
+        studentEntity.setTeachers(null);
+
         studentRepository.deleteById(id);
     }
 

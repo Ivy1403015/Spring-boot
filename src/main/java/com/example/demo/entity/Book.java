@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import com.example.demo.dto.BookDto;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,7 +28,7 @@ public class Book {
         private Long id;
         private String name;
 
-        @ManyToOne
+        @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
         @JoinColumn(name = "teacherId") // 設定外鍵名稱
         private Teacher teacher;
 

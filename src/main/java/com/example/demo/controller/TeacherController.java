@@ -79,8 +79,8 @@ public class TeacherController {
     }
 
     @PatchMapping("/api/teacher/{id}")
-    public TeacherDto updateTeacher(@PathVariable Long id, @RequestBody TeacherDto teacher) {
-        return teacherService.updateTeacher(id, teacher);
+    public TeacherDto patchTeacher(@PathVariable Long id, @RequestBody TeacherDto teacher) {
+        return teacherService.patchTeacher(id, teacher);
     }
 
     @DeleteMapping("/api/teacher/{id}")

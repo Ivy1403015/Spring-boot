@@ -12,7 +12,7 @@ public interface TeacherService {
 
     TeacherDto createTeacher(TeacherDto teacher);
 
-    TeacherDto updateTeacher(Long id, TeacherDto teacher);
+    TeacherDto patchTeacher(Long id, TeacherDto teacher);
 
     void deleteTeacher(Long id);
 }

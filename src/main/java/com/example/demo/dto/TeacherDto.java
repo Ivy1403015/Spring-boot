@@ -20,19 +20,19 @@ public class TeacherDto {
     private Long id;
     private String name;
 
-    private List<Long> booksId = new ArrayList<>();
-    private List<Long> studentsId = new ArrayList<>();
+    private List<Long> bookIds = new ArrayList<>();
+    private List<Long> studentIds = new ArrayList<>();
 
     public TeacherDto(Teacher teacher) {
         this.id = teacher.getId();
         this.name = teacher.getName();
 
         if (teacher.getStudents() != null) {
-            this.studentsId = teacher.getStudents().stream().map(Student::getId).collect(Collectors.toList());
+            this.studentIds = teacher.getStudents().stream().map(Student::getId).collect(Collectors.toList());
         }
 
         if (teacher.getBooks() != null) {
-            this.booksId = teacher.getBooks().stream().map(Book::getId).collect(Collectors.toList());
+            this.bookIds = teacher.getBooks().stream().map(Book::getId).collect(Collectors.toList());
         }
 
     }
